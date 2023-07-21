@@ -4,9 +4,6 @@ app = Flask(__name__)
 
 alunos = dict()
 
-@app.route('/')
-def index():
-    return '<h1>TESTE</h1>'
 
 @app.get('/aluno')
 def aluno_get():
@@ -57,5 +54,22 @@ def aluno_delete():
             res = alunos[id]
             del  alunos[id]
             return jsonify(res)
+    else:
+        return jsonify({'mensagem': 'Error'}), 400
+
+
+@app.put('/aluno')
+def aluno_put():
+    if request.is_json:
+        data = request.get_json()
+        try:
+            id = int(data.get('id'))
+            nome = data.get('nome')
+            nota = data.get('nota')
+
+            alunos[id] = {'nome': nome, 'nota': nota}
+
+        except Exception:
+            return jsonify({'mensagem': 'Error'}), 500
     else:
         return jsonify({'mensagem': 'Error'}), 400
