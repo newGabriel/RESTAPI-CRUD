@@ -13,7 +13,6 @@ def aluno_get():
     if request.is_json:
         data = request.get_json()
         id = data.get('id')
-        print(id)
         if type(id) is list:
             l = list()
             for i in id:
@@ -39,5 +38,24 @@ def aluno_post():
         alunos[id] = {'nome': nome, 'nota': nota}
 
         return jsonify(alunos[id]), 200
+    else:
+        return jsonify({'mensagem': 'Error'}), 400
+
+
+@app.delete('/aluno')
+def aluno_delete():
+    if request.is_json:
+        data = request.get_json()
+        id = data.get('id')
+        if type(id) is list:
+            for i in id:
+                if i in alunos:
+                    res = alunos[i]
+                    del alunos[i]
+            return jsonify(res)
+        elif id in alunos:
+            res = alunos[id]
+            del  alunos[id]
+            return jsonify(res)
     else:
         return jsonify({'mensagem': 'Error'}), 400
